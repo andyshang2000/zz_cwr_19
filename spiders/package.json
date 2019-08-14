@@ -1,0 +1,32 @@
+{
+  "name": "spider",
+  "version": "1.0.0",
+  "scripts": {
+    "run-ctrip": "ts-node ./scripts/ctrip.ts",
+    "run-mmjpg": "ts-node ./scripts/mmjpg.ts",
+    "run-mmjpg-proxy": "ts-node ./scripts/mmjpg-proxy.ts",
+    "run-baidu-index": "ts-node ./scripts/baidu-index.ts",
+    "run-es6-pdf": "ts-node ./scripts/es6-pdf.ts",
+    "run-music163": "ts-node ./scripts/music163.ts",
+    "run-toutiao": "ts-node ./scripts/interceptor/toutiao.ts"
+  },
+  "dependencies": {
+    "chalk": "^2.3.2",
+    "puppeteer": "^1.11.0",
+    "request": "^2.88.0",
+    "socks5-http-client": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^5.0.1",
+    "@types/jest": "^22.1.1",
+    "@types/lru-cache": "^4.1.0",
+    "@types/reflect-metadata": "^0.1.0",
+    "jest": "^22.1.4",
+    "ts-jest": "^22.0.2",
+    "ts-loader": "^4.3.0",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.9.1",
+    "tslint-config-standard": "^7.0.0",
+    "typescript": "^2.6.2"
+  }
+}

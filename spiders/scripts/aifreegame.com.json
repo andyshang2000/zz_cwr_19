@@ -1,0 +1,9 @@
+{
+"category-page":[
+	"https://www.aifreegame.com/princess-games.html",
+	"https://www.aifreegame.com/baby-games.html"
+],
+
+"crawl-type":"ajax",
+"ajax":"https://www.aifreegame.com/ajax/index?categoryid=37&type=30&count=33&page=3&ismobile=false"
+}
