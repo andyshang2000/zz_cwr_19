@@ -82,7 +82,7 @@ async function main(): Promise<void> {
 						url: undefined,
 						desc: undefined,
 						tags: undefined,
-						cat: "女生游戏",
+						cat: undefined,
 						date: undefined,
 						played: undefined,
 						gametype: undefined
@@ -142,6 +142,7 @@ async function main(): Promise<void> {
 						return (document.querySelector("#html5-content") as HTMLIFrameElement).src;
 					});
 				}
+				dataArray[i].cat=category;
 				/*整理数据写入文件*/
 				gamesDatas.push(dataArray[i]);
 				indexDatas[dataArray[i].title] = nextIndex;
