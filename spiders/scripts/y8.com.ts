@@ -17,28 +17,47 @@ interface GameData {
 	played: number
 	gametype: string
 }
+interface Result{
+	data:GameData[]
+	index:{}
+}
 
-const filePath = path.resolve(__dirname, '../data/y8.com/' + 'y8.json');
+const filePath = path.resolve(__dirname, '../data/y8.com/' + 'y10.json');
 var pageCount = 0;
 var category="";
 var browser;
 const [node, tsPath, startPage, ...args] = process.argv;
+var ResultData:Result;
+var gamesDatas=[];
+var indexDatas={};
+var nextIndex=0;
+var pageNumber=1;
+
 /读数据文件*/
 function readJson(jsonFilePath: string) {
 	if (fileSystem.existsSync(jsonFilePath)) {
-		return JSON.parse(fileSystem.readFileSync(jsonFilePath, 'utf-8'));
+		let content=fileSystem.readFileSync(jsonFilePath, 'utf-8');
+		if(content)
+			return JSON.parse(content);
+		return null;
 	}
 	else {
-		return {};
+		return null;
 	}
 }
-/*初始化上次抓取进度*/
-const ResultData = readJson(filePath);
-const gamesDatas = ResultData.data;
-const indexDatas = ResultData.index;
-var nextIndex = Object.keys(indexDatas).length;
-var pageNumber = (nextIndex >> 6) + 1;
-console.log("初始页码-----------" + pageNumber);
+// /*初始化上次抓取进度*/
+ResultData = readJson(filePath);
+if(ResultData){
+	gamesDatas = ResultData.data;
+	indexDatas = ResultData.index;
+	nextIndex = Object.keys(indexDatas).length;
+	pageNumber = (nextIndex >> 6) + 1;
+	console.log("初始页码-----------" + pageNumber);
+}
+else
+	ResultData={"data":[],"index":{}};
+
+
 
 async function main(): Promise<void> {
 	/*实例化浏览器对象*/
@@ -58,7 +77,10 @@ async function main(): Promise<void> {
 			width: 1366,
 			height: 768
 		})
-
+		//await page.on('dialog', async dialog => {
+	    //await page.waitFor(2000);//特意加两秒等可以看到弹框出现后取消
+	    //await dialog.dismiss();
+		//});
 		/*起始页面*/
 		await page.goto(startPage, { timeout: 0 });
 		log(chalk.yellow('页面初次加载完毕'));
@@ -68,11 +90,11 @@ async function main(): Promise<void> {
 		});
 		category=await page.evaluate(()=>{
 			return document.querySelector(".small-title.with-description").textContent.trim();
-		})
+		});
 		console.log("total pages:"+pageCount);
 		console.log("game category:"+category);
 		const handleData = async () => {
-			let dataArray = await page.evaluate((idata) => {
+			let dataArray = await page.evaluate(idata => {
 				const gamesData: GameData[] = [];
 				let gameNode = document.querySelectorAll('.item.thumb.videobox');
 				for (let i = 0; i < gameNode.length; ++i) {
@@ -146,8 +168,8 @@ async function main(): Promise<void> {
 				/*整理数据写入文件*/
 				gamesDatas.push(dataArray[i]);
 				indexDatas[dataArray[i].title] = nextIndex;
-				ResultData["data"] = gamesDatas;
-				ResultData["index"] = indexDatas;
+				ResultData.data = gamesDatas;
+				ResultData.index = indexDatas;
 				fileSystem.writeFile(filePath, JSON.stringify(ResultData), {}, function (err) {
 					if (err) {
 						log(chalk.red('写入文件失败'));
