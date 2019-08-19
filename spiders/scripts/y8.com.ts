@@ -3,6 +3,7 @@ import * as fileSystem from 'fs'
 import * as path from 'path'
 import chalk from 'chalk'
 import { timeout } from '../utils/timeout'
+import { fstat } from 'fs-extra';
 
 const log = console.log
 
@@ -22,11 +23,20 @@ interface Result{
 	index:{}
 }
 
-const filePath = path.resolve(__dirname, '../data/y8.com/' + 'y10.json');
+fileSystem.mkdir("../data/y8.com",function(err){
+	if(err){
+		console.log(err);
+	}
+	else{
+		console.log("创建目录成功");
+	}
+})
+const [node, tsPath, outfileName,startPage, ...args] = process.argv;
+const filePath = path.resolve(__dirname, '../data/y8.com/' + outfileName);
+console.log(filePath);
 var pageCount = 0;
 var category="";
 var browser;
-const [node, tsPath, startPage, ...args] = process.argv;
 var ResultData:Result;
 var gamesDatas=[];
 var indexDatas={};
