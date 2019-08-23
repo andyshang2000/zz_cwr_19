@@ -243,14 +243,14 @@ async function main(): Promise<void> {
 			//http://www.4399.com/flash_fl/more_5_2.htm
 			let str = await startPage.substring(0, startPage.lastIndexOf("_") + 1);
 			let index=str.lastIndexOf("/")+1;
+			let res;
 			if(pageNumber==1)
-				await page.goto(str + pageNumber + ".htm");
+				res = await page.goto(str + pageNumber + ".htm");
 			else
-				await page.goto(str.slice(0,index) +"more_"+str.slice(index)+pageNumber + ".htm");
+				res = await page.goto(str.slice(0,index) +"more_"+str.slice(index)+pageNumber + ".htm");
 			console.log("进入第" + pageNumber + "页")
-			let flag = await page.$(".bg-c");
-			if (flag)
-				break;
+			if(res.status()!=200)
+				continue;
 			await page.waitFor(5000);
 			await handleData();
 

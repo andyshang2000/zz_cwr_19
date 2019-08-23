@@ -59,7 +59,7 @@ async function main(): Promise<void> {
 			width: 1366,
 			height: 768
 		})
-
+		
 		/*起始页面*/
 		await page.goto(startPage, { timeout: 0 });
 		await page.waitFor(3000);
@@ -112,8 +112,14 @@ async function main(): Promise<void> {
 				}
 			});
 		};
-		for(let i=1;i<=1592;++i,++nextIndex){
-			await page.goto("http://up.zdhm.xyz/detail?id="+i,{timeout:0});
+		for(let i=197;i<=1592;++i,++nextIndex){
+			let url="http://up.zdhm.xyz/detail?id="+i
+			let res = await page.goto(url,{timeout:0});
+			if(res.status()!=200){
+				console.log(res.status());
+				continue;
+			}
+
 			await page.waitFor(3000);
 			await handleData(i);
 		}
