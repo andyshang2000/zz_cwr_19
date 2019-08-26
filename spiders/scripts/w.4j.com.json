@@ -1,6 +1,6 @@
 {
 "category-page":[
-	"http://w.4j.com/html5games"
+	{"url":"http://w.4j.com/html5games","name":"all"}
 ],
 
 "crawl-type":"browser"

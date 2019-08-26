@@ -1,6 +1,6 @@
 {
 "category-page":[
-	"http://up.zdhm.xyz"
+	{"url":"http://up.zdhm.xyz","name":"all"}
 ],
 
 "crawl-type":"browser"

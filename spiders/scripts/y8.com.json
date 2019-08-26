@@ -1,8 +1,8 @@
 {
 "category-page":[
-	"https://zh.y8.com/categories/girls",
-	"https://zh.y8.com/categories/shooting",
-	"https://zh.y8.com/categories/strategy"
+	{"url":"https://zh.y8.com/categories/girls","name":"girls"},
+	{"url":"https://zh.y8.com/categories/shooting","name":"shooting"},
+	{"url":"https://zh.y8.com/categories/strategy","name":"strategy"}
 ],
 
 "crawl-type":"browser"
