@@ -113,6 +113,7 @@ async function main(): Promise<void> {
 					}
 					gameData.tags=tagArr.join(",");
 					gameData.desc=detail.querySelector(".desc").innerHTML.trim();
+					gameData.url=(document.querySelector(".fixbtn>a") as HTMLLinkElement).href;
 					gameData.date = new Date().toLocaleString();
 				return gameData;
 			});
@@ -120,7 +121,10 @@ async function main(): Promise<void> {
 				nextIndex--;
 				return;
 			}
-			data.url=page.url();
+			await page.goto(data.url,{timeout:0});
+			data.url=await page.evaluate(()=>{
+				return document.querySelector("#game").getAttribute("data");
+			});
 			indexDatas[data.title]=nextIndex;
 			gamedatas.push(data);
 			/*整理数据写入文件*/
