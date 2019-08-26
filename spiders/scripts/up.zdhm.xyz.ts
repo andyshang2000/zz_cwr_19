@@ -89,7 +89,7 @@ async function main(): Promise<void> {
 					for(let i=0;i<tagItem.length;++i){
 						tagArr.push(tagItem[i].textContent.trim());
 					}
-					gameData.tags=tagArr.join(" ");
+					gameData.tags=tagArr.join(,);
 					gameData.desc=detail.querySelector(".desc").innerHTML.trim();
 					gameData.date = new Date().toLocaleString();
 				return gameData;

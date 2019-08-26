@@ -138,7 +138,8 @@ async function main(): Promise<void> {
 				});
 
 				dataArray[i].tags=await page.evaluate(()=>{
-					return (document.getElementById("pubidDiv").getElementsByTagName("input")[5].value.trim());
+					let str = document.getElementById("pubidDiv").getElementsByTagName("input")[5].value.trim();
+					return str.split(", ").join(",");
 				});
 				dataArray[i].desc=await page.evaluate(()=>{
 					return (document.getElementById("pubidDiv").getElementsByTagName("textarea")[0].innerHTML.trim());
