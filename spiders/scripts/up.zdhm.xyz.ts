@@ -135,10 +135,11 @@ async function main(): Promise<void> {
 			});
 		};
 		
-		for(;nextIndex<=1592;++nextIndex){
-			let url="http://up.zdhm.xyz/detail?id="+(nextIndex+1);
+		for(let i=nextIndex+1;i<=1592;++i,++nextIndex){
+			let url="http://up.zdhm.xyz/detail?id="+i;
 			let res = await page.goto(url,{timeout:0});
 			if(res.status()!=200){
+				nextIndex--;
 				console.log(res.status());
 				continue;
 			}
