@@ -37,8 +37,33 @@ console.log(filePath);
 var category = "";
 var browser;
 var ResultData: Result = { "data": [], "index": {} };
+var gamesDatas=[];
 var indexDatas = {};
 var nextIndex = 0;
+
+/读数据文件*/
+function readJson(jsonFilePath: string) {
+	if (fileSystem.existsSync(jsonFilePath)) {
+		let content = fileSystem.readFileSync(jsonFilePath, 'utf-8');
+		if (content)
+			return JSON.parse(content);
+		return null;
+	}
+	else {
+		return null;
+	}
+}
+// /*初始化上次抓取进度*/
+ResultData = readJson(filePath);
+if (ResultData) {
+	gamesDatas = ResultData.data;
+	indexDatas = ResultData.index;
+	nextIndex = Object.keys(indexDatas).length;
+}
+else
+	ResultData = { "data": [], "index": {} };
+
+
 
 async function main(): Promise<void> {
 	/*实例化浏览器对象*/
@@ -65,7 +90,7 @@ async function main(): Promise<void> {
 		log(chalk.yellow('页面初次加载完毕'));
 		category = page.url().substring(page.url().indexOf("=") + 1);
 		const handleData = async () => {
-			let dataArray = await page.evaluate(() => {
+			let dataArray = await page.evaluate((idata) => {
 				const gamesData: GameData[] = [];
 				let gameNode = document.querySelectorAll('.thumb');
 				for (let i = 0; i < gameNode.length; ++i) {
@@ -82,6 +107,9 @@ async function main(): Promise<void> {
 					};
 					let maincover = gameNode[i].querySelector(".maincover");
 					gameData.title = maincover.querySelector("img").alt;
+					//过滤已经存在的title
+					if (idata.hasOwnProperty(gameData.title))
+						continue;
 					gameData.img = maincover.querySelector("img").src;
 					let overcover = gameNode[i].querySelector(".overcover");
 					/*此处为进入当前game的url*/
@@ -91,13 +119,14 @@ async function main(): Promise<void> {
 					gamesData.push(gameData);
 				}
 				return gamesData;
-			});
-			for (; nextIndex < dataArray.length; ++nextIndex) {
-				dataArray[nextIndex].cat = category;
-				indexDatas[dataArray[nextIndex].title] = nextIndex;
+			},indexDatas);
+			for (let i=0; i < dataArray.length; ++i,++nextIndex) {
+				dataArray[i].cat = category;
+				gamesDatas.push(dataArray[i]);
+				indexDatas[dataArray[i].title] = nextIndex;
 			}
 			/*整理数据写入文件*/
-			ResultData.data = dataArray;
+			ResultData.data = gamesDatas;
 			ResultData.index = indexDatas;
 			fileSystem.writeFile(filePath, JSON.stringify(ResultData), {}, function (err) {
 				if (err) {

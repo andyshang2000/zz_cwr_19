@@ -40,6 +40,28 @@ var ResultData: Result = { "data": [], "index": {} };
 var gamedatas=[];
 var indexDatas = {};
 var nextIndex = 0;
+/读数据文件*/
+function readJson(jsonFilePath: string) {
+	if (fileSystem.existsSync(jsonFilePath)) {
+		let content = fileSystem.readFileSync(jsonFilePath, 'utf-8');
+		if (content)
+			return JSON.parse(content);
+		return null;
+	}
+	else {
+		return null;
+	}
+}
+// /*初始化上次抓取进度*/
+ResultData = readJson(filePath);
+if (ResultData) {
+	gamedatas = ResultData.data;
+	indexDatas = ResultData.index;
+	nextIndex = Object.keys(indexDatas).length;
+}
+else
+	ResultData = { "data": [], "index": {} };
+
 
 async function main(): Promise<void> {
 	/*实例化浏览器对象*/
@@ -64,7 +86,7 @@ async function main(): Promise<void> {
 		await page.goto(startPage, { timeout: 0 });
 		await page.waitFor(3000);
 		log(chalk.yellow('页面初次加载完毕'));
-		const handleData = async (index) => {
+		const handleData = async () => {
 			let data = await page.evaluate(() => {
 					let gameData: GameData = {
 						title: undefined,
@@ -98,7 +120,7 @@ async function main(): Promise<void> {
 				nextIndex--;
 				return;
 			}
-			data.url="http://up.zdhm.xyz/play?id="+index;
+			data.url=page.url();
 			indexDatas[data.title]=nextIndex;
 			gamedatas.push(data);
 			/*整理数据写入文件*/
@@ -112,8 +134,9 @@ async function main(): Promise<void> {
 				}
 			});
 		};
-		for(let i=1;i<=1592;++i,++nextIndex){
-			let url="http://up.zdhm.xyz/detail?id="+i
+		
+		for(;nextIndex<=1592;++nextIndex){
+			let url="http://up.zdhm.xyz/detail?id="+(nextIndex+1);
 			let res = await page.goto(url,{timeout:0});
 			if(res.status()!=200){
 				console.log(res.status());
@@ -121,7 +144,7 @@ async function main(): Promise<void> {
 			}
 
 			await page.waitFor(3000);
-			await handleData(i);
+			await handleData();
 		}
 		/*任务结束，关闭浏览器对象*/
 		await browser.close();

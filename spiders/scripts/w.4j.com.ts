@@ -26,7 +26,7 @@ interface Result {
 
 fileSystem.mkdir("../data/w.4j.com", function (err) {
 	if (err) {
-		console.log(err);
+		console.log("目录已存在");
 	}
 	else {
 		console.log("创建目录成功");
@@ -122,7 +122,7 @@ async function main(): Promise<void> {
 					gameData.title = games[i].querySelector(".gamename").innerHTML.trim();
 					//过滤已经存在的title
 					if (idata.hasOwnProperty(gameData.title))
-					continue;
+						continue;
 					gameData.date = new Date().toLocaleString();
 					gamesData.push(gameData);
 				}
