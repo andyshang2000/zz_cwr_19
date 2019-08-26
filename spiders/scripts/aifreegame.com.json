@@ -1,7 +1,7 @@
 {
 "category-page":[
-	"https://www.aifreegame.com/princess-games.html",
-	"https://www.aifreegame.com/baby-games.html"
+	{"url":"https://www.aifreegame.com/princess-games.html", "name":"princess-games"},
+	{"url":"https://www.aifreegame.com/baby-games.html", "name":"baby-games"}
 ],
 
 "crawl-type":"ajax",
