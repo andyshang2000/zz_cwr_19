@@ -18,36 +18,36 @@ interface GameData {
 	played: number
 	gametype: string
 }
-interface Result{
-	data:GameData[]
-	index:{}
+interface Result {
+	data: GameData[]
+	index: {}
 }
 
-fileSystem.mkdir("../data/y8.com",function(err){
-	if(err){
+fileSystem.mkdir("../data/y8.com", function (err) {
+	if (err) {
 		console.log(err);
 	}
-	else{
+	else {
 		console.log("创建目录成功");
 	}
 })
-const [node, tsPath, outfileName,startPage, ...args] = process.argv;
+const [node, tsPath, outfileName, startPage, ...args] = process.argv;
 const filePath = path.resolve(__dirname, '../data/y8.com/' + outfileName);
 console.log(filePath);
 var pageCount = 0;
-var category="";
+var category = "";
 var browser;
-var ResultData:Result;
-var gamesDatas=[];
-var indexDatas={};
-var nextIndex=0;
-var pageNumber=1;
+var ResultData: Result;
+var gamesDatas = [];
+var indexDatas = {};
+var nextIndex = 0;
+var pageNumber = 1;
 
 /读数据文件*/
 function readJson(jsonFilePath: string) {
 	if (fileSystem.existsSync(jsonFilePath)) {
-		let content=fileSystem.readFileSync(jsonFilePath, 'utf-8');
-		if(content)
+		let content = fileSystem.readFileSync(jsonFilePath, 'utf-8');
+		if (content)
 			return JSON.parse(content);
 		return null;
 	}
@@ -57,7 +57,7 @@ function readJson(jsonFilePath: string) {
 }
 // /*初始化上次抓取进度*/
 ResultData = readJson(filePath);
-if(ResultData){
+if (ResultData) {
 	gamesDatas = ResultData.data;
 	indexDatas = ResultData.index;
 	nextIndex = Object.keys(indexDatas).length;
@@ -65,7 +65,7 @@ if(ResultData){
 	console.log("初始页码-----------" + pageNumber);
 }
 else
-	ResultData={"data":[],"index":{}};
+	ResultData = { "data": [], "index": {} };
 
 
 
@@ -87,22 +87,22 @@ async function main(): Promise<void> {
 			width: 1366,
 			height: 768
 		})
-		//await page.on('dialog', async dialog => {
-	    //await page.waitFor(2000);//特意加两秒等可以看到弹框出现后取消
-	    //await dialog.dismiss();
-		//});
+		await page.on('dialog', async dialog => {
+			await page.waitFor(2000);
+			await dialog.dismiss();
+		});
 		/*起始页面*/
 		await page.goto(startPage, { timeout: 0 });
 		log(chalk.yellow('页面初次加载完毕'));
-		pageCount=await page.evaluate(()=>{
-			let lastHref=document.querySelector(".last.long").getAttribute("href").trim();
-			return parseInt(lastHref.substring(lastHref.indexOf('=')+1));
+		pageCount = await page.evaluate(() => {
+			let lastHref = document.querySelector(".last.long").getAttribute("href").trim();
+			return parseInt(lastHref.substring(lastHref.indexOf('=') + 1));
 		});
-		category=await page.evaluate(()=>{
+		category = await page.evaluate(() => {
 			return document.querySelector(".small-title.with-description").textContent.trim();
 		});
-		console.log("total pages:"+pageCount);
-		console.log("game category:"+category);
+		console.log("total pages:" + pageCount);
+		console.log("game category:" + category);
 		const handleData = async () => {
 			let dataArray = await page.evaluate(idata => {
 				const gamesData: GameData[] = [];
@@ -174,7 +174,7 @@ async function main(): Promise<void> {
 						return (document.querySelector("#html5-content") as HTMLIFrameElement).src;
 					});
 				}
-				dataArray[i].cat=category;
+				dataArray[i].cat = category;
 				/*整理数据写入文件*/
 				gamesDatas.push(dataArray[i]);
 				indexDatas[dataArray[i].title] = nextIndex;
@@ -191,8 +191,8 @@ async function main(): Promise<void> {
 		};
 		/*从起始页循环抓取数据*/
 		for (let i = pageNumber; i <= pageCount; ++i) {
-			await page.goto(startPage+"?page=" + i, { timeout: 0 });
-			console.log("进入第"+pageNumber+"页")
+			await page.goto(startPage + "?page=" + i, { timeout: 0 });
+			console.log("进入第" + pageNumber + "页")
 			await handleData();
 			await page.waitFor(3000);
 		}

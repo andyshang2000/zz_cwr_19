@@ -83,7 +83,10 @@ async function main(): Promise<void> {
 			width: 1366,
 			height: 768
 		})
-
+		await page.on('dialog', async dialog => {
+			await page.waitFor(2000);
+			await dialog.dismiss();
+		});s
 		/*起始页面*/
 		await page.goto(startPage, { timeout: 0 });
 		await page.waitFor(3000);

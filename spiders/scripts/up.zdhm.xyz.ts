@@ -37,7 +37,7 @@ console.log(filePath);
 var category = "";
 var browser;
 var ResultData: Result = { "data": [], "index": {} };
-var gamedatas=[];
+var gamedatas = [];
 var indexDatas = {};
 var nextIndex = 0;
 /读数据文件*/
@@ -72,7 +72,7 @@ async function main(): Promise<void> {
 		ignoreHTTPSErrors: true
 	})
 	log(chalk.green('服务正常启动'))
-
+		
 	/*开始抓取数据*/
 	try {
 		/*实例化页面*/
@@ -81,51 +81,54 @@ async function main(): Promise<void> {
 			width: 1366,
 			height: 768
 		})
-		
+		await page.on('dialog', async dialog => {
+			await page.waitFor(2000);
+			await dialog.dismiss();
+		});
 		/*起始页面*/
 		await page.goto(startPage, { timeout: 0 });
 		await page.waitFor(3000);
 		log(chalk.yellow('页面初次加载完毕'));
 		const handleData = async () => {
 			let data = await page.evaluate(() => {
-					let gameData: GameData = {
-						title: undefined,
-						img: undefined,
-						url: undefined,
-						desc: "",
-						tags: "",
-						cat: undefined,
-						date: undefined,
-						played: 0,
-						gametype: "h5"
-					};
-					let detail=document.querySelector(".detail");
-					gameData.title = detail.querySelector("img").title;
-					gameData.img = detail.querySelector("img").src;
-					gameData.cat=detail.querySelector(".tag").textContent.trim();
-					let playedStr=detail.querySelector(".play").innerHTML.trim().split(" ")[1];
-					playedStr=playedStr.replace(",","");
-					gameData.played =parseInt(playedStr.replace("K+","000"));
-					let tagItem=document.querySelectorAll(".tag-item");
-					let tagArr=[];
-					for(let i=0;i<tagItem.length;++i){
-						tagArr.push(tagItem[i].textContent.trim());
-					}
-					gameData.tags=tagArr.join(",");
-					gameData.desc=detail.querySelector(".desc").innerHTML.trim();
-					gameData.url=(document.querySelector(".fixbtn>a") as HTMLLinkElement).href;
-					gameData.date = new Date().toLocaleString();
+				let gameData: GameData = {
+					title: undefined,
+					img: undefined,
+					url: undefined,
+					desc: "",
+					tags: "",
+					cat: undefined,
+					date: undefined,
+					played: 0,
+					gametype: "h5"
+				};
+				let detail = document.querySelector(".detail");
+				gameData.title = detail.querySelector("img").title;
+				gameData.img = detail.querySelector("img").src;
+				gameData.cat = detail.querySelector(".tag").textContent.trim();
+				let playedStr = detail.querySelector(".play").innerHTML.trim().split(" ")[1];
+				playedStr = playedStr.replace(",", "");
+				gameData.played = parseInt(playedStr.replace("K+", "000"));
+				let tagItem = document.querySelectorAll(".tag-item");
+				let tagArr = [];
+				for (let i = 0; i < tagItem.length; ++i) {
+					tagArr.push(tagItem[i].textContent.trim());
+				}
+				gameData.tags = tagArr.join(",");
+				gameData.desc = detail.querySelector(".desc").innerHTML.trim();
+				gameData.url = (document.querySelector(".fixbtn>a") as HTMLLinkElement).href;
+				gameData.date = new Date().toLocaleString();
 				return gameData;
 			});
-			if (indexDatas.hasOwnProperty(data.title)){
+			if (indexDatas.hasOwnProperty(data.title)) {
 				nextIndex--;
 				return;
 			}
-			await page.goto(data.url,{timeout:0});
-			data.url=await page.evaluate(()=>{
+			await page.goto(data.url, { timeout: 0 });
+			data.url = await page.evaluate(() => {
 				return document.querySelector("#game").getAttribute("data");
 			});
-			indexDatas[data.title]=nextIndex;
+			indexDatas[data.title] = nextIndex;
 			gamedatas.push(data);
 			/*整理数据写入文件*/
 			ResultData.data = gamedatas;
@@ -138,11 +141,11 @@ async function main(): Promise<void> {
 				}
 			});
 		};
-		
-		for(let i=nextIndex+1;i<=1592;++i,++nextIndex){
-			let url="http://up.zdhm.xyz/detail?id="+i;
-			let res = await page.goto(url,{timeout:0});
-			if(res.status()!=200){
+
+		for (let i = nextIndex + 1; i <= 1592; ++i, ++nextIndex) {
+			let url = "http://up.zdhm.xyz/detail?id=" + i;
+			let res = await page.goto(url, { timeout: 0 });
+			if (res.status() != 200) {
 				nextIndex--;
 				console.log(res.status());
 				continue;

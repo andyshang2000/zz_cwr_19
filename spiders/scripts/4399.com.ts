@@ -87,6 +87,10 @@ async function main(): Promise<void> {
 			width: 1366,
 			height: 768
 		})
+		await page.on('dialog', async dialog => {
+			await page.waitFor(2000);
+			await dialog.dismiss();
+		});
 		/*起始页面*/
 		await page.goto(startPage, { timeout: 0 });
 		log(chalk.yellow('页面初次加载完毕'));
