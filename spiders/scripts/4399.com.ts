@@ -108,16 +108,17 @@ async function main(): Promise<void> {
 		// 	return arr;
 		// })
 		// console.log(imgs);
-
-		pageCount = await page.evaluate(() => {
+		const array = await page.evaluate(() => {
 			let page_div = document.getElementsByClassName("pag")[1];
 			let pageTags = page_div.getElementsByTagName("a");
-			return parseInt(pageTags[pageTags.length - 2].innerHTML.trim());
-		});
-		category = await page.evaluate(() => {
+			let pageCount = parseInt(pageTags[pageTags.length - 2].innerHTML.trim());
 			let cat_div = document.querySelector(".nav.m10");
-			return cat_div.querySelector(".on").innerHTML.trim();
+			let category = cat_div.querySelector(".on").innerHTML.trim();
+			return[pageCount,category];
 		});
+		pageCount = array[0];
+		category = array[1];
+		
 		console.log("total pages:" + pageCount);
 		console.log("game category:" + category);
 		const handleData = async () => {
@@ -164,12 +165,13 @@ async function main(): Promise<void> {
 						let tagArr = [];
 						for (let j = 0; j < a_tags.length; ++j) {
 							console.log(a_tags[i]);
-							if (a_tags[j].textContent.trim() == "H5游戏")
-								dataArray[j].gametype = "h5";
 							tagArr.push(a_tags[j].textContent.trim());
 						}
 						return tagArr.join(" ");
 					});
+					if(dataArray[i].tags.indexOf("H5游戏")!=-1){
+							dataArray[i].gametype="h5";
+					}
 					dataArray[i].desc = await page.evaluate(() => {
 						let intro = document.querySelector("#introduce");
 						if (intro)
