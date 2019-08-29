@@ -11,6 +11,7 @@
     "run-toutiao": "ts-node ./scripts/interceptor/toutiao.ts"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "chalk": "^2.3.2",
     "puppeteer": "^1.11.0",
     "request": "^2.88.0",
