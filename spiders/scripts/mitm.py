@@ -12,7 +12,6 @@ class Joker:
                 with open('1.tmp', 'r') as f:
                     self.downloadDir = f.read()
                 os.remove('1.tmp')
-                os.mkdir(self.downloadDir)
         except Exception as err:
             return
         if "wd" not in flow.request.query.keys():
