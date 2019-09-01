@@ -59,7 +59,10 @@ async function main(): Promise<void> {
 			else
 				return "";
 		});
-		await download(swfurl, filePath);
+		if(swfurl)
+			await download(swfurl, filePath);
+		else 
+			throw new Error("非法的url");
 		await browser.close();
 	} catch (error) {
 		console.log(error);
