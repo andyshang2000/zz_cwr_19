@@ -60,6 +60,7 @@ async function main(): Promise<void> {
 				return "";
 		});
 		await download(swfurl, filePath);
+		log(chalk.green('swf address:' + swfurl));
 		await browser.close();
 	} catch (error) {
 		console.log(error);
