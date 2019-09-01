@@ -12,7 +12,7 @@ function endWith(str: string, target: string) {
 }
 //测试命令
 //ts-node y8download.ts prettygirl.swf https://zh.y8.com/games/mermaid_pretty_girl 
-const [node, tsPath, outfileName, startPage, outDir = "../data/y8.com/swf", headless = false, ...args] = process.argv;
+const [node, tsPath, outfileName, startPage, outDir = "../data/y8.com/swf", headless = true, ...args] = process.argv;
 
 fs.mkdir(outDir, function (err) {
 	if (err) {
