@@ -2,9 +2,7 @@ import * as puppeteer from 'puppeteer'
 import * as fileSystem from 'fs'
 import * as path from 'path'
 import chalk from 'chalk'
-import { timeout } from '../utils/timeout'
-import { fstat } from 'fs-extra';
-import { SlowBuffer } from 'buffer';
+
 //ts-node 4399.com.ts yz.json http://www.4399.com/flash_fl/5_1.htm
 const log = console.log
 function endWith(str:string,target:string){
