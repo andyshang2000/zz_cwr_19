@@ -2,11 +2,14 @@ import * as puppeteer from 'puppeteer'
 import * as fileSystem from 'fs'
 import * as path from 'path'
 import chalk from 'chalk'
-import { timeout } from '../utils/timeout'
-import { fstat } from 'fs-extra';
+
 //ts-node 4399.com.ts yz.json http://www.4399.com/flash_fl/5_1.htm
 const log = console.log
-
+function endWith(str:string,target:string){
+	let start =str.length-target.length;
+	let sub=str.substring(start);
+	return sub==target;
+}
 interface GameData {
 	title: string
 	img: string
@@ -158,6 +161,7 @@ async function main(): Promise<void> {
 				await page.goto(dataArray[i].url, { timeout: 0 });
 				await page.waitFor(2000);
 				let intr_box = await page.$(".intr.cf");
+				let swfdiv=await page.$("#swfdiv");
 				if (intr_box) {
 
 					dataArray[i].tags = await page.evaluate(() => {
@@ -182,6 +186,7 @@ async function main(): Promise<void> {
 					let start = await intr_box.$(".play>.btn");
 					await start.click();
 					await page.waitFor(1000);
+					
 					if (dataArray[i].gametype == "h5") {
 						dataArray[i].url = await page.evaluate(() => {
 							return (document.querySelector("#flash22") as HTMLIFrameElement).src;
@@ -197,8 +202,8 @@ async function main(): Promise<void> {
 						});
 					}
 				}
-				else {
-					dataArray[i].desc = await page.evaluate(() => {
+				else if(swfdiv){
+						dataArray[i].desc = await page.evaluate(() => {
 						let instruction = document.querySelector(".game_cz");
 						if (instruction) {
 							let desc_p = instruction.getElementsByClassName("n_box")[0].getElementsByTagName("p")[2];
@@ -209,12 +214,13 @@ async function main(): Promise<void> {
 					});
 					/*根据gametype抓取url*/
 					dataArray[i].url = await page.evaluate(() => {
-						let embed = document.querySelector("#flash22");
+						let embed = document.querySelector("#flashgame1");
 						if (embed)
 							return (embed as HTMLEmbedElement).src;
 						else
-							return (document.querySelector("#flashgame1") as HTMLIFrameElement).src;
+							return (document.querySelector("#flash22") as HTMLIFrameElement).src;
 					});
+					
 					dataArray[i].tags = await page.evaluate(() => {
 						let tags_div = document.querySelector(".game_fl");
 						if (tags_div) {
@@ -225,6 +231,16 @@ async function main(): Promise<void> {
 							}
 							return tagArr.join(" ");
 						}
+					});
+				}
+				else{
+					nextIndex--;
+					continue;
+				}
+				if(dataArray[i].gametype=="flash" && endWith(dataArray[i].url,".htm")){
+					await page.goto(dataArray[i].url);
+					dataArray[i].url=await page.evaluate(()=>{
+						return (document.querySelector("object>embed") as HTMLEmbedElement).src;
 					});
 				}
 				dataArray[i].cat = category;
@@ -255,7 +271,7 @@ async function main(): Promise<void> {
 			else
 				res = await page.goto(str.slice(0,index) +"more_"+str.slice(index)+pageNumber + ".htm");
 			console.log("进入第" + pageNumber + "页")
-			if(res.status()!=200)
+			if(res.status()>400)
 				continue;
 			await page.waitFor(5000);
 			await handleData();
