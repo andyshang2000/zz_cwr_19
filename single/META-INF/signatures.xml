@@ -1,0 +1,45 @@
+<signatures>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#" Id="PackageSignature">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+      <SignatureMethod Algorithm="http://www.w3.org/TR/xmldsig-core#rsa-sha1"/>
+      <Reference URI="#PackageContents">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <DigestValue>h/xv3Z+mN97lIuKOXX3z3MXNJUSgMEZlSwEEm8HINZ4=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue Id="PackageSignatureValue">Xc7PE/+RzZg4l4/532qW6r+grtnrRbv/gf6DX+jLyb0FpBB2F0M6+URQCjzPfqaasXvnXi5FeT8x
+ccysEnVAxXwJh1CDwPfgH4I8twqkYtQKYExP3Bm9Dz9YovmlEtPmisn03zVI55Kd4tykoSgEBgQv
+MfEy1TXEB9OWugXf5OHYtUGaHwjiCH2IuL865mobr+ta8vYau5iRqeMZ3EsH7Mtlpa2pnCuptviW
+hWtt+GP+ncknko7kVU/r/Sd1Ikkopm+iJF7ryQci7iySm6xTJNIIwYv+YnCuFN1kFIvnjFLXdl8g
+BcX7ULF3cwt0nVVk+Vd8fi/uVN1sVztMMmslDQ==</SignatureValue>
+    <KeyInfo>
+      <X509Data>
+        <X509Certificate>MIIDLTCCAhWgAwIBAgIaMzE0NzI3NmE6MTZjZmEyMjhmODc6LTgwMDAwDQYJKoZIhvcNAQEFBQAw
+QTELMAkGA1UEBhMCVVMxCTAHBgNVBAoTADEJMAcGA1UECxMAMRwwGgYDVQQDExNhbmRzLWNyYXds
+ZXItc2luZ2xlMB4XDTE5MDkwMzAyMzc0NFoXDTQ0MDkwNDAyMzc0NFowQTELMAkGA1UEBhMCVVMx
+CTAHBgNVBAoTADEJMAcGA1UECxMAMRwwGgYDVQQDExNhbmRzLWNyYXdsZXItc2luZ2xlMIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgXlgMJF3RQ0PHAoBSCBTPRF7gv+DnQ5odPxLZBBx
+c7ShAonPgnJBg/HGm6ruuEQSYnUambg3pUjfL4sqzMXe/AMuoLXxkT1g+bZIjkyZ2ZVhwCPBHUWp
+elX+ocBUvTEY2Z7aEscSRs+WB5C/Xt8Jj3oa5a1GnnIXfIpagglvhBHfTQW/HwGk8z2ngkMof17e
+sqrRqwu/W15prxfmJfSyb3T/ePz1ujMecAUEVhOV9yfyAj4Civ7L4AHlFH1bWWvON/sM9zTA9sXg
+OAirWq7kKO2NIAuMUkt3ZkSYEfcCRk9Odcv0a0PHSA7yqkExOEXQyXfu0C0zq69+pm3l80rD4QID
+AQABoxcwFTATBgNVHSUEDDAKBggrBgEFBQcDAzANBgkqhkiG9w0BAQUFAAOCAQEAcpuZ4hQy18oK
+cDzw508KTXH3EXqhpxPPvYHiUOIEfh5KVHtSXvl2iX/KfyCfyhep28X8dJjx3hLz1MKdowUuAH7g
+WKPtYPSGtZ2LRyMw/ofMraTQn+ye/PfNRAiAExrtTwL78z58fBts0orKodIWATcCqsqXDTVTwODq
+gznCgkqgFkpY0gP6pgUq73HjvwwKnX4h16kQzXn8VqShtykIlDMPhXpQsLO0M0sCyo6FExlQPg2I
+CSirCx4OHZOlFoPXOAlPtyfxvg5pdpRwodRmR3/3y9BPYK9FWIFtTxZX1HTJtk7Usekb8uXWzmbB
+HWlW310bYVAatmkZXVHxPiAMeg==</X509Certificate>
+      </X509Data>
+    </KeyInfo>
+    <Object>
+      <Manifest Id="PackageContents">
+        <Reference URI="mimetype"><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod><DigestValue>0/oCb84THKMagtI0Dy0KogEu92TegdesqRr/clXct1c=</DigestValue></Reference><Reference URI="META-INF/AIR/application.xml"><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod><DigestValue>prNeiaHluQfmgzLGtSGc9ydlJaQXSG2I6JxN5KW+NIo=</DigestValue></Reference><Reference URI="fairygui/editor/basic_builder.bin"><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod><DigestValue>jPuIm3mW0MGmlKfYTQTxI6CRIuvO52El00IJETPREIs=</DigestValue></Reference><Reference URI="fairygui/editor/basic_pkg.bin"><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod><DigestValue>QmSjewyvETXVrh5GL+HNiMGFf6kggofik5b2A5bvUEk=</DigestValue></Reference><Reference URI="fairygui/editor/qdrEditor.bin"><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod><DigestValue>IsDWiOmJTOMvic1TxS7zyDqnKTnRe+A+NWoNyMQXIfM=</DigestValue></Reference><Reference URI="fairygui/editor/qdrEditor.zip"><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod><DigestValue>J4T/frZPLzxZQoS4UyZi2dpQ1w6KuBREli2rOOoNHNE=</DigestValue></Reference><Reference URI="SingleSWF.swf"><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod><DigestValue>NKMC3tVte7Ps/2TchPIb2OWjqmRNmn3VdJKeCQPVJJ8=</DigestValue></Reference>
+      </Manifest>
+    </Object>
+    
+  </Signature>
+</signatures>
