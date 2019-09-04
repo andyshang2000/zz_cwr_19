@@ -59,10 +59,12 @@ async function main(): Promise<void> {
 			else
 				return "";
 		});
+
 		if(swfurl)
 			await download(swfurl, filePath);
 		else 
 			throw new Error("非法的url");
+		log(chalk.green('swf address:' + swfurl));
 		await browser.close();
 	} catch (error) {
 		console.log(error);
