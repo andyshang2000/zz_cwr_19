@@ -1,51 +1,42 @@
 @echo off
-::设置程序或文件的完整路径（必选）
+
 set Single=%cd%\single\single.exe
 set BatchExe=%cd%\batch\batch.exe
-set Program=%BatchExe%
-::设置快捷方式名称（必选）
-set LnkName=采集器
+set ProgramFile=%BatchExe%
+
+set LnkName=BATCH
  
-::设置程序的工作路径，一般为程序主目录，此项若留空，脚本将自行分析路径
 set WorkDir=%cd%
- 
-::设置快捷方式显示的说明（可选）
-set Desc=古木造型管理系统
- 
-if not defined WorkDir call:GetWorkDir "%Program%"
+
+pause
+
+if not defined WorkDir call:GetWorkDir "%ProgramFile%"
 (echo Set WshShell=CreateObject("WScript.Shell"^)
 echo strDesKtop=WshShell.SpecialFolders("."^)
 echo Set oShellLink=WshShell.CreateShortcut("%LnkName%.lnk"^)
-echo oShellLink.TargetPath="%Program%"
+echo oShellLink.TargetPath="%ProgramFile%"
 echo oShellLink.WorkingDirectory="%WorkDir%"
 echo oShellLink.WindowStyle=1
 echo oShellLink.Description="%Desc%"
 echo oShellLink.Save)>makelnk.vbs
-echo 桌面快捷方式创建成功！ 
 makelnk.vbs
 del /f /q makelnk.vbs
 
 
-set Program=%Single%
-::设置快捷方式名称（必选）
-set LnkName=下载单独文件
+set ProgramFile=%Single%
+set LnkName=SINGLE
  
-::设置程序的工作路径，一般为程序主目录，此项若留空，脚本将自行分析路径
 set WorkDir=%cd%
  
-::设置快捷方式显示的说明（可选）
-set Desc=古木造型管理系统
- 
-if not defined WorkDir call:GetWorkDir "%Program%"
+if not defined WorkDir call:GetWorkDir "%ProgramFile%"
 (echo Set WshShell=CreateObject("WScript.Shell"^)
 echo strDesKtop=WshShell.SpecialFolders("."^)
 echo Set oShellLink=WshShell.CreateShortcut("%LnkName%.lnk"^)
-echo oShellLink.TargetPath="%Program%"
+echo oShellLink.TargetPath="%ProgramFile%"
 echo oShellLink.WorkingDirectory="%WorkDir%"
 echo oShellLink.WindowStyle=1
 echo oShellLink.Description="%Desc%"
 echo oShellLink.Save)>makelnk.vbs
-echo 桌面快捷方式创建成功！ 
 makelnk.vbs
 del /f /q makelnk.vbs
 ::exit
