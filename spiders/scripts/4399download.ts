@@ -81,9 +81,8 @@ async function main(): Promise<void> {
 				return (document.querySelector("object>embed") as HTMLEmbedElement).src;
 			});
 		}
-		await download(swfurl, filePath);
 		await browser.close();
-		await log(chalk.green('服务正常结束'));
+		await download(swfurl, filePath);
 	} catch (error) {
 		console.log(error);
 		log(chalk.red('服务意外终止'));

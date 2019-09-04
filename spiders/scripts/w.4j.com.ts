@@ -32,7 +32,7 @@ fileSystem.mkdir("../data/w.4j.com", function (err) {
 		console.log("创建目录成功");
 	}
 })
-const [node, tsPath, outfileName, startPage, ...args] = process.argv;
+const [node, tsPath, outfileName, startPage,headless=true, ...args] = process.argv;
 const filePath = path.resolve(__dirname, '../data/w.4j.com/' + outfileName);
 console.log(filePath);
 var category = "";
@@ -69,7 +69,7 @@ else
 async function main(): Promise<void> {
 	/*实例化浏览器对象*/
 	browser = await puppeteer.launch({
-		headless: false,
+		headless: headless,
 		timeout: 30000,
 		//args:['--proxy-server=127.0.0.1:8080', '--ignore-certificate-errors'],
 		ignoreHTTPSErrors: true

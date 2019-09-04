@@ -31,7 +31,7 @@ fileSystem.mkdir("../data/up.zdhm.xyz", function (err) {
 		console.log("创建目录成功");
 	}
 })
-const [node, tsPath, outfileName, startPage, headless = false, ...args] = process.argv;
+const [node, tsPath, outfileName, startPage, headless = true, ...args] = process.argv;
 const filePath = path.resolve(__dirname, '../data/up.zdhm.xyz/' + outfileName);
 console.log(filePath);
 var category = "";
