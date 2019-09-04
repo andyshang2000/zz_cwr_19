@@ -85,7 +85,7 @@ async function main(): Promise<void> {
 		await download(swfurl,filePath);
 		await browser.close();
 		log(chalk.green('服务正常结束'));
-		process.exit(0);
+		//process.exit(0);
 	} catch (error) {
 		console.log(error);
 		log(chalk.red('服务意外终止'));
