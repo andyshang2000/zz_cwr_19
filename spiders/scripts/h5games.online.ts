@@ -31,7 +31,7 @@ fileSystem.mkdir("../data/h5games.online", function (err) {
 		console.log("创建目录成功");
 	}
 })
-const [node, tsPath, outfileName, startPage, headless = true, ...args] = process.argv;
+const [node, tsPath, outfileName, startPage, headless = false, ...args] = process.argv;
 const filePath = path.resolve(__dirname, '../data/h5games.online/' + outfileName);
 console.log(filePath);
 var category = "";
@@ -91,46 +91,40 @@ async function main(): Promise<void> {
 		await page.goto(startPage, { timeout: 0 });
 		await page.waitFor(3000);
 		log(chalk.yellow('页面初次加载完毕'));
-		category = page.url().substring(page.url().indexOf("=") + 1);
-		const handleData = async () => {
-			let dataArray = await page.evaluate((idata) => {
-				const gamesData: GameData[] = [];
-				let gameNode = document.querySelectorAll('.thumb');
-				for (let i = 0; i < gameNode.length; ++i) {
-					let gameData: GameData = {
-						title: undefined,
-						img: undefined,
-						url: undefined,
-						desc: "",
-						tags: "",
-						cat: undefined,
-						date: undefined,
-						played: 0,
-						gametype: "h5"
-					};
-					let maincover = gameNode[i].querySelector(".maincover");
-					gameData.title = maincover.querySelector("img").alt;
-					//过滤已经存在的title
-					if (idata.hasOwnProperty(gameData.title))
-						continue;
-					gameData.img = maincover.querySelector("img").src;
-					let overcover = gameNode[i].querySelector(".overcover");
-					/*此处为进入当前game的url*/
-					gameData.url = overcover.querySelector("a").href;
 
-					gameData.date = new Date().toLocaleString();
-					gamesData.push(gameData);
-				}
-				return gamesData;
-			},indexDatas);
-			for (let i=0; i < dataArray.length; ++i,++nextIndex) {
-				dataArray[i].cat = category;
-				gamesDatas.push(dataArray[i]);
-				indexDatas[dataArray[i].title] = nextIndex;
+		let jsonUrl=await page.evaluate(()=>{
+			return (document.querySelector("#json>a") as HTMLAnchorElement).href;
+		})
+		let res=await page.goto(jsonUrl);
+		let jsonArray=await res.json();
+		for(;nextIndex<jsonArray.length;++nextIndex){
+			let gameData: GameData = {
+				title: undefined,
+				img: undefined,
+				url: undefined,
+				desc: "",
+				tags: "",
+				cat: undefined,
+				date: undefined,
+				played: 0,
+				gametype: "h5"
+			};
+			gameData.title=jsonArray[nextIndex].title;
+			if(indexDatas.hasOwnProperty(jsonArray[nextIndex].title)){
+				--nextIndex;
+				continue;
 			}
-			/*整理数据写入文件*/
+			gameData.img=jsonArray[nextIndex].thumb;
+			gameData.url=jsonArray[nextIndex].link;
+			gameData.desc=jsonArray[nextIndex].description;
+			gameData.tags=jsonArray[nextIndex].tags;
+			gameData.cat=jsonArray[nextIndex].category;
+			gameData.date=new Date().toLocaleString();
+			gamesDatas.push(gameData);
+			indexDatas[gameData.title] = nextIndex;
 			ResultData.data = gamesDatas;
 			ResultData.index = indexDatas;
+			//console.log(ResultData);
 			fileSystem.writeFile(filePath, JSON.stringify(ResultData), {}, function (err) {
 				if (err) {
 					log(chalk.red('写入文件失败'));
@@ -138,10 +132,7 @@ async function main(): Promise<void> {
 					log(chalk.yellow('写入文件成功'));
 				}
 			});
-		};
-		await handleData();
-		await page.waitFor(3000);
-
+		}
 		/*任务结束，关闭浏览器对象*/
 		await browser.close();
 		log(chalk.green('服务正常结束'));
