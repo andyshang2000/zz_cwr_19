@@ -6,7 +6,7 @@
 import * as puppeteer from 'puppeteer'
 import chalk from 'chalk'
 /*延时方法引入*/
-import { timeout } from '../utils/timeout'
+import { timeout } from '../../utils/timeout'
 
 /*log对象*/
 const log = console.log
