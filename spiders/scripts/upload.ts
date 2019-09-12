@@ -21,13 +21,13 @@ function readJson(jsonFilePath: string) {
 		return null;
 	}
 }
-const[node,tsPath,localGameDir="C:/Users/姜安乐/Desktop/fsdownload/games",remote_gamePath="/home/jal/games",serverPath="/home/jal"]=process.argv;
+const[node,tsPath,localGameDir="E:/desktop/Main/spiders/resource/up.zdhm.xyz",remote_gamePath="/opt/www/kkgames/public/games",serverPath="/opt/www/kkgames/public"]=process.argv;
 // //本地游戏总目录
-// var localGameDir="C:/Users/姜安乐/Desktop/fsdownload/games"
+// var localGameDir="E:/desktop/Main/spiders/resource/up.zdhm.xyz"
 // //服务器存游戏文件的总目录
-// var remote_gamePath = "/home/jal/games";
+// var remote_gamePath = "/opt/www/kkgames/public/games";
 // //php后台服务器路径
-// var serverPath="/home/jal";
+// var serverPath="/opt/www/kkgames/public;
 
 //log文件路径
 const logPath = path.resolve(__dirname, '../data/upload.log');
@@ -35,7 +35,7 @@ var record={"uploadLog":[],"index":{}};
 var uploadlog:uploadLog[]=[];
 var indexData={};
 var nextIndex=0;
-
+var regex=/^[A-Za-z0-9_\-]+$/ig;
 // 初始化上传进度
 record = readJson(logPath);
 if (record) {
@@ -91,17 +91,18 @@ async function main():Promise<void>{
     await sftp.connect({
         host: '45.76.225.115',
         port: '22',
-        username: 'jal',
-        password: 'qiuweidao123'
+        username: 'root',
+        password: ',Hh6$,Q!HRM[SnX$'
     });
 
     let games = await fs.readdirSync(localGameDir);
 
     for(let i=0;i<games.length;++i,++nextIndex){
-        var localGame=localGameDir+"/"+games[i]
+		var g=games[i].replace(/\s+/g,"-");
+        var localGame=localGameDir+"/"+games[i];
         var stats=await fs.statSync(localGame);
         //过滤已上传的游戏
-        if(indexData.hasOwnProperty(games[i])){
+        if(!regex.test(g)||indexData.hasOwnProperty(games[i])){
             nextIndex--;
             continue;
         }
@@ -113,7 +114,7 @@ async function main():Promise<void>{
             };
             log.gameName=games[i];
             try {
-                let gamePath=remote_gamePath+"/"+games[i];
+                let gamePath=remote_gamePath+"/"+g;
                 await sftp.mkdir(gamePath); 
                 log.path=gamePath.substring(serverPath.length);
                 await uploadDir(sftp,localGame);
