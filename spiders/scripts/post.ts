@@ -102,19 +102,14 @@ for(let i=0;i<gamesData.length;++i){
         continue;
     var arr=gamesData[i].title.split(" ");
     for(let j=0;j<arr.length;++j){
-        arr[j]=arr[j].charAt(0).toUpperCase()+arr[j].slice(1);
+        arr[j]=arr[j].charAt(0).toLowerCase()+arr[j].slice(1);
     }
     data.localgame=json[gamesData[i].title];
-    data.localimg=arr.join("-");
+    data.localimg="/gamesimages/"+arr.join("-");
 
-    request({
-        url:"www.jzjo.com/post.php",
-        method:"POST",
-        json:"true",
-        headers:{
-            "content-type": "application/json",
-        },
-        body:JSON.stringify(data)
+    request.post({
+        url:"https://www.jzjo.com/post.php",
+        form:data
     },function(error,response,body){
         if(!error&&response.statusCode == 200){
             console.log("上传成功");

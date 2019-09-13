@@ -103,10 +103,10 @@ async function main(): Promise<void> {
         let localGame;
         let name;
         for (let j = 0; j < files.length; ++j) {
-            let temp = await fs.readFileSync(files[j]);
+            let temp = await fs.readdirSync(gameDir + "/"+ files[j]);
             if (temp.indexOf("index.html") != -1) {
-                localGame = gameDir + files[i];
-                name = files[i];
+                localGame = gameDir + "/" + files[j];
+                name = files[j];
                 break;
             }
         }
