@@ -35,6 +35,11 @@ for(let i=0;i<gamesData.length;++i){
         str.toLowerCase();
     }
     var imgName=arr.join("-")+".png";
-    download(gamesData[i].img,"../data/xyz.games/"+imgName);
+    try {
+        download(gamesData[i].img,"../data/xyz.games/"+imgName);
+    } catch (error) {
+        console.log(error.message);
+    }
+
 }
 //download("http://up.zdhm.xyz/images/2018102409434778511.png","../data/1.png")
