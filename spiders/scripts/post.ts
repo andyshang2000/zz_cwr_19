@@ -56,27 +56,7 @@ gamesData = readJson(filePath).data;
 
 var logData: uploadLog[] = [];
 const uploadLogPath = path.resolve(__dirname, '../data/upload.log');
-logData = readJson(uploadLogPath).uploadLog;
-var json = {};
-for (let i = 0; i < logData.length; ++i) {
-    let title = logData[i].gameName;
-    if (title.indexOf("-") != -1) {
-        let arr = title.split("-");
-        for (let j = 0; j < arr.length; ++j) {
-            arr[j] = arr[j].charAt(0).toUpperCase() + arr[j].slice(1);
-        }
-        json[arr.join(" ")] = logData[i].path;
-    }
-    else if (title.indexOf("_") != -1) {
-        let arr = title.split("_");
-        for (let j = 0; j < arr.length; ++j) {
-            arr[j] = arr[j].charAt(0).toUpperCase() + arr[j].slice(1);
-        }
-        json[arr.join(" ")] = logData[i].path;
-    } else {
-        json[title.toUpperCase()] = logData[i].path;
-    }
-}
+logData = readJson(uploadLogPath).index;
 
 for (let i = 0; i < gamesData.length; ++i) {
     let data: postdata = {
@@ -118,13 +98,14 @@ for (let i = 0; i < gamesData.length; ++i) {
         }
 
     }
-    if (!json[gamesData[i].title])
-        continue;
+
     var arr = gamesData[i].title.split(" ");
     for (let j = 0; j < arr.length; ++j) {
-        arr[j] = arr[j].charAt(0).toLowerCase() + arr[j].slice(1);
+        arr[j] = arr[j].toLowerCase();
     }
-    data.localgame = json[gamesData[i].title];
+    if (logData.hasOwnProperty(arr.join("-")))
+        continue;
+    data.localgame = "/games/" + arr.join("-");
     data.localimg = "/gamesimages/" + arr.join("-");
 
     request.post({

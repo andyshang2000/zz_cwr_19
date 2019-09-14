@@ -82,6 +82,7 @@ async function main(): Promise<void> {
 			});
 		}
 		await browser.close();
+		await download(swfurl, filePath);
 	} catch (error) {
 		console.log(error);
 		log(chalk.red('服务意外终止'));

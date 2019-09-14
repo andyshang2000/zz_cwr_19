@@ -133,7 +133,7 @@ async function main(): Promise<void> {
             uploadlog.push(log);
             console.log(log);
             console.log(uploadlog)
-            indexData[games[i]] = nextIndex;
+            indexData[name] = nextIndex;
             record["uploadLog"] = uploadlog;
             record["index"] = indexData;
             fs.writeFile(logPath, JSON.stringify(record), {}, (err) => {
