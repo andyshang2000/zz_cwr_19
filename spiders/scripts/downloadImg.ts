@@ -31,8 +31,8 @@ const filePath = path.resolve(__dirname, 'E:/desktop/Main/spiders/data/up.zdhm.x
 gamesData = readJson(filePath).data;
 for(let i=0;i<gamesData.length;++i){
     var arr=gamesData[i].title.split(" ")
-    for(let str in arr){
-        str.toLowerCase();
+    for(let j=0;j<arr.length;++j){
+        arr[j]=arr[j].toLowerCase();
     }
     var imgName=arr.join("-")+".png";
     try {
