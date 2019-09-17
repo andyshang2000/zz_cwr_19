@@ -49,7 +49,7 @@ function readJson(jsonFilePath: string) {
         return null;
     }
 }
-var catArray = ['Girls'];
+var catArray = ['Girls','Sports','Puzzle','Action','Arcade','Adventure','Strategy','Music','Beauty','Risk','Racing','Logic'];
 var gamesData: gamedata[] = [];
 const filePath = path.resolve(__dirname, 'E:/desktop/Main/spiders/data/up.zdhm.xyz/all.json');
 gamesData = readJson(filePath).data;
@@ -78,24 +78,26 @@ for (let i = 0; i < gamesData.length; ++i) {
     }
     if (gamesData[i].cat) {
         //data.category_id=gamesData[i].cat;
-        var catdata = {
-            name: gamesData[i].cat,
-            rating: 1
-        }
-        if (catArray.indexOf(gamesData[i].cat) == -1) {
-            catArray.push(gamesData[i].cat);
-            catdata.rating = catArray.indexOf(gamesData[i].cat) + 1
-            data.category_id = catdata.rating
-            request.post({
-                url: "http://www.jzjo.com/admin/categories/create",
-                method: 'POST',
-                form: catdata
-            }, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    console.log("add cat 成功");
-                }
-            });
-        }
+        let catarr = gamesData[i].cat.split(" ");
+        data.category_id = catArray.indexOf(catarr[0])+1;
+        // var catdata = {
+        //     name: gamesData[i].cat,
+        //     rating: 1
+        // }
+        // if (catArray.indexOf(gamesData[i].cat) == -1) {
+        //     catArray.push(gamesData[i].cat);
+        //     catdata.rating = catArray.indexOf(gamesData[i].cat) + 1
+        //     data.category_id = catdata.rating
+        //     request.post({
+        //         url: "http://www.jzjo.com/admin/categories/create",
+        //         method: 'POST',
+        //         form: catdata
+        //     }, function (error, response, body) {
+        //         if (!error && response.statusCode == 200) {
+        //             console.log("add cat 成功");
+        //         }
+        //     });
+        // }
 
     }
 
