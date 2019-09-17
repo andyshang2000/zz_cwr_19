@@ -116,7 +116,27 @@ for (let i = 0; i < gamesData.length; ++i, ++nextIndex) {
     data.localgame = "/games/" + arr.join("-");
     data.localimg = "/gamesimages/" + arr.join("-");
 
-    request.post({
+    handle(data);
+    // request.post({
+    //     url: "https://www.jzjo.com/post.php",
+    //     method: 'POST',
+    //     form: data
+    // }, function (error, response, body) {
+    //     if (!error && response.statusCode == 200) {
+    //         console.log("上传成功");
+    //     }
+    // });
+    // logData[gamesData[i].title] = nextIndex;
+    // fs.writeFile(uploadLogPath, JSON.stringify(logData), {}, (err) => {
+    //     if (err)
+    //         console.log("写入log失败!");
+    //     else
+    //         console.log("写入log成功!");
+    // })
+}
+
+async function handle(data){
+    await request.post({
         url: "https://www.jzjo.com/post.php",
         method: 'POST',
         form: data
@@ -125,8 +145,10 @@ for (let i = 0; i < gamesData.length; ++i, ++nextIndex) {
             console.log("上传成功");
         }
     });
-    logData[gamesData[i].title] = nextIndex;
-    fs.writeFile(uploadLogPath, JSON.stringify(logData), {}, (err) => {
+    await request.end();
+    await timeout(1000);
+    logData[data.title] = nextIndex;
+    await fs.writeFile(uploadLogPath, JSON.stringify(logData), {}, (err) => {
         if (err)
             console.log("写入log失败!");
         else
