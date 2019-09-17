@@ -3,7 +3,7 @@ import * as path from 'path'
 import { timeout } from '../utils/timeout'
 
 var request = require("request")
-
+var http=require('http');
 interface uploadLog {
     gameName: string
     path: string
@@ -63,7 +63,7 @@ if (readJson(uploadLogPath)) {
     nextIndex = Object.keys(logData).length
 }
 var postArray:postdata[]=[]
-for (let i = 0; i < gamesData.length; ++i, ++nextIndex) {
+for (let i = 0; i < gamesData.length; ++i) {
     let data: postdata = {
         name: gamesData[i].title,
         imageurl: gamesData[i].img,
@@ -111,7 +111,6 @@ for (let i = 0; i < gamesData.length; ++i, ++nextIndex) {
         arr[j] = arr[j].toLowerCase();
     }
     if (logData.hasOwnProperty(gamesData[i].title)) {
-        --nextIndex;
         continue;
     }
     data.localgame = "/games/" + arr.join("-");
@@ -136,31 +135,43 @@ for (let i = 0; i < gamesData.length; ++i, ++nextIndex) {
     //     else
     //         console.log("写入log成功!");
     // })
+
 }
+
+
+
 
  function handle(index){
      if(index>=postArray.length)return;
-     request.post({
-        url: "https://www.jzjo.com/post.php",
+     const options = {
+        path: 'https://www.jzjo.com/post.php',
         method: 'POST',
-        form: postArray[index]
-    }, function (error, response, body) {
-        response.on('end',function(){
-            nextIndex++;
-            handle(index+1);
-        })
-        if (!error && response.statusCode == 200) {
-            console.log("上传成功");
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': Buffer.byteLength(JSON.stringify(postArray[index]))
         }
-    });
-    request.end();
-    logData[gamesData[index].title] = nextIndex;
-    fs.writeFile(uploadLogPath, JSON.stringify(logData), {}, (err) => {
-        if (err)
-            console.log("写入log失败!");
-        else
-            console.log("写入log成功!");
-    })
+      };
+      var req=http.request(options,function(res){
+          var content="";
+          res.on('data',function(data){
+            content+=data;
+          })
+          res.on('end',function(){
+              console.log("请求完成");
+              handle(index+1);
+          });
+      });
+      req.on("error",function(err){
+          if(err)
+            console.log(err)
+      })
+    // logData[gamesData[index].title] = nextIndex;
+    // fs.writeFile(uploadLogPath, JSON.stringify(logData), {}, (err) => {
+    //     if (err)
+    //         console.log("写入log失败!");
+    //     else
+    //         console.log("写入log成功!");
+    // })
 }
 
 handle(0);
