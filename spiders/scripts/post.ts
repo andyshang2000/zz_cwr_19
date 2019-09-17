@@ -83,7 +83,7 @@ for (let i = 0; i < gamesData.length; ++i, ++nextIndex) {
     if (gamesData[i].cat) {
         //data.category_id=gamesData[i].cat;
         let catarr = gamesData[i].cat.split(" ");
-        data.category_id = catArray.indexOf(catarr[0]) + 1;
+        data.category_id = catArray.indexOf(catarr[0]) + 2;
         // var catdata = {
         //     name: gamesData[i].cat,
         //     rating: 1
