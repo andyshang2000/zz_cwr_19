@@ -51,13 +51,17 @@ function readJson(jsonFilePath: string) {
 }
 var catArray = ['Girls','Sports','Puzzle','Action','Arcade','Adventure','Strategy','Music','Beauty','Risk','Racing','Logic'];
 var gamesData: gamedata[] = [];
-const filePath = path.resolve(__dirname, 'E:/desktop/Main/spiders/data/up.zdhm.xyz/all.json');
+const filePath = path.resolve(__dirname, 'E:/desktop/Main/spiders/data/up.zdhm.xyz/respider.json');
 gamesData = readJson(filePath).data;
 
-var logData: uploadLog[] = [];
-const uploadLogPath = path.resolve(__dirname, '../data/upload.log');
-logData = readJson(uploadLogPath).index;
 
+var logData = {};
+var nextIndex = 0;
+const uploadLogPath = path.resolve(__dirname, '../data/up.zdhm.xyz/post.log');
+if(readJson(uploadLogPath)){
+    logData = readJson(uploadLogPath);
+    nextIndex = Object.keys(logData).length
+}
 for (let i = 0; i < gamesData.length; ++i) {
     let data: postdata = {
         name: gamesData[i].title,
@@ -119,6 +123,13 @@ for (let i = 0; i < gamesData.length; ++i) {
             console.log("上传成功");
         }
     });
+
+    fs.writeFile(uploadLogPath, JSON.stringify(logData), {}, (err) => {
+        if (err)
+            console.log("写入log失败!");
+        else
+            console.log("写入log成功!");
+    })
 }
 
 
