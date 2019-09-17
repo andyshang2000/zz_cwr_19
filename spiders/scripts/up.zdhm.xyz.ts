@@ -128,6 +128,28 @@ async function main(): Promise<void> {
 			data.url = await page.evaluate(() => {
 				return document.querySelector("#game").getAttribute("data");
 			});
+			//title处理
+
+			let arr=data.url.split("/");
+			let title=arr[arr.length-2];
+			if(title.indexOf("-")!=-1){
+				arr=title.split("-");
+				for(let t=0;t<arr.length;++t){
+					arr[t]=arr[t].charAt(0).toUpperCase()+arr[t].slice(1);
+				}
+				data.title=arr.join(" ");
+			}
+			else if(title.indexOf("_")!=-1){
+				arr=title.split("_");
+				for(let t=0;t<args.length;++t){
+					arr[t]=arr[t].charAt(0).toUpperCase()+arr[t].slice(1);
+				}
+				data.title=arr.join(" ");
+			}
+			else{
+				data.title=title.charAt(0).toUpperCase+title.slice(1);
+			}
+
 			indexDatas[data.title] = nextIndex;
 			gamedatas.push(data);
 			/*整理数据写入文件*/
