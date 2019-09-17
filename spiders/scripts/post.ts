@@ -62,6 +62,7 @@ if (readJson(uploadLogPath)) {
     logData = readJson(uploadLogPath);
     nextIndex = Object.keys(logData).length
 }
+var postArray:postdata[]=[]
 for (let i = 0; i < gamesData.length; ++i, ++nextIndex) {
     let data: postdata = {
         name: gamesData[i].title,
@@ -116,7 +117,9 @@ for (let i = 0; i < gamesData.length; ++i, ++nextIndex) {
     data.localgame = "/games/" + arr.join("-");
     data.localimg = "/gamesimages/" + arr.join("-");
 
-    handle(data);
+    postArray.push(data);
+
+    
     // request.post({
     //     url: "https://www.jzjo.com/post.php",
     //     method: 'POST',
@@ -135,20 +138,24 @@ for (let i = 0; i < gamesData.length; ++i, ++nextIndex) {
     // })
 }
 
-async function handle(data){
-    await request.post({
+ function handle(index){
+     if(index>=postArray.length)return;
+     request.post({
         url: "https://www.jzjo.com/post.php",
         method: 'POST',
-        form: data
+        form: postArray[index]
     }, function (error, response, body) {
+        response.on('end',function(){
+            nextIndex++;
+            handle(index+1);
+        })
         if (!error && response.statusCode == 200) {
             console.log("上传成功");
         }
     });
-    await request.end();
-    await timeout(1000);
-    logData[data.title] = nextIndex;
-    await fs.writeFile(uploadLogPath, JSON.stringify(logData), {}, (err) => {
+    request.end();
+    logData[gamesData[index].title] = nextIndex;
+    fs.writeFile(uploadLogPath, JSON.stringify(logData), {}, (err) => {
         if (err)
             console.log("写入log失败!");
         else
@@ -156,4 +163,4 @@ async function handle(data){
     })
 }
 
-
+handle(0);
