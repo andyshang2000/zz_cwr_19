@@ -147,7 +147,7 @@ async function main(): Promise<void> {
 				data.title=arr.join(" ");
 			}
 			else{
-				data.title=title.charAt(0).toUpperCase+title.slice(1);
+				data.title=title.charAt(0).toUpperCase()+title.slice(1);
 			}
 
 			indexDatas[data.title] = nextIndex;
