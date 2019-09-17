@@ -49,7 +49,7 @@ function readJson(jsonFilePath: string) {
         return null;
     }
 }
-var catArray = ['Girls','Sports','Puzzle','Action','Arcade','Adventure','Strategy','Music','Beauty','Risk','Racing','Logic'];
+var catArray = ['Girls', 'Sports', 'Puzzle', 'Action', 'Arcade', 'Adventure', 'Strategy', 'Music', 'Beauty', 'Risk', 'Racing', 'Logic'];
 var gamesData: gamedata[] = [];
 const filePath = path.resolve(__dirname, 'E:/desktop/Main/spiders/data/up.zdhm.xyz/respider.json');
 gamesData = readJson(filePath).data;
@@ -58,11 +58,11 @@ gamesData = readJson(filePath).data;
 var logData = {};
 var nextIndex = 0;
 const uploadLogPath = path.resolve(__dirname, '../data/up.zdhm.xyz/post.log');
-if(readJson(uploadLogPath)){
+if (readJson(uploadLogPath)) {
     logData = readJson(uploadLogPath);
     nextIndex = Object.keys(logData).length
 }
-for (let i = 0; i < gamesData.length; ++i) {
+for (let i = 0; i < gamesData.length; ++i, ++nextIndex) {
     let data: postdata = {
         name: gamesData[i].title,
         imageurl: gamesData[i].img,
@@ -83,7 +83,7 @@ for (let i = 0; i < gamesData.length; ++i) {
     if (gamesData[i].cat) {
         //data.category_id=gamesData[i].cat;
         let catarr = gamesData[i].cat.split(" ");
-        data.category_id = catArray.indexOf(catarr[0])+1;
+        data.category_id = catArray.indexOf(catarr[0]) + 1;
         // var catdata = {
         //     name: gamesData[i].cat,
         //     rating: 1
@@ -109,8 +109,10 @@ for (let i = 0; i < gamesData.length; ++i) {
     for (let j = 0; j < arr.length; ++j) {
         arr[j] = arr[j].toLowerCase();
     }
-    if (logData.hasOwnProperty(arr.join("-")))
+    if (logData.hasOwnProperty(gamesData[i].title)) {
+        --nextIndex;
         continue;
+    }
     data.localgame = "/games/" + arr.join("-");
     data.localimg = "/gamesimages/" + arr.join("-");
 
@@ -123,7 +125,7 @@ for (let i = 0; i < gamesData.length; ++i) {
             console.log("上传成功");
         }
     });
-
+    logData[gamesData[i].title] = nextIndex;
     fs.writeFile(uploadLogPath, JSON.stringify(logData), {}, (err) => {
         if (err)
             console.log("写入log失败!");
