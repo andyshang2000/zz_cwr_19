@@ -2,8 +2,8 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { timeout } from '../utils/timeout'
 
-var request = require("request")
-var http=require('http');
+
+var http=require('https');
 interface uploadLog {
     gameName: string
     path: string
@@ -51,7 +51,7 @@ function readJson(jsonFilePath: string) {
 }
 var catArray = ['Girls', 'Sports', 'Puzzle', 'Action', 'Arcade', 'Adventure', 'Strategy', 'Music', 'Beauty', 'Risk', 'Racing', 'Logic'];
 var gamesData: gamedata[] = [];
-const filePath = path.resolve(__dirname, 'E:/desktop/Main/spiders/data/up.zdhm.xyz/respider.json');
+const filePath = path.resolve(__dirname, 'E:/desktop/Main/spiders/data/up.zdhm.xyz/all.json');
 gamesData = readJson(filePath).data;
 
 
@@ -106,15 +106,15 @@ for (let i = 0; i < gamesData.length; ++i) {
 
     }
 
-    var arr = gamesData[i].title.split(" ");
-    for (let j = 0; j < arr.length; ++j) {
-        arr[j] = arr[j].toLowerCase();
-    }
+    var arr = gamesData[i].img.split("/");
     if (logData.hasOwnProperty(gamesData[i].title)) {
         continue;
     }
-    data.localgame = "/games/" + arr.join("-");
-    data.localimg = "/gamesimages/" + arr.join("-");
+	let arr1=gamesData[i].url.split("/");
+	let tmp=arr1[arr1.length-2];
+	
+    data.localgame = "/games/" + tmp;
+    data.localimg = "/gamesimages/" + arr[arr.length-1];
 
     postArray.push(data);
 
@@ -141,30 +141,26 @@ for (let i = 0; i < gamesData.length; ++i) {
 
 
 
- function handle(index){
-     if(index>=postArray.length)return;
-     const options = {
-        path: 'https://www.jzjo.com/post.php',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Length': Buffer.byteLength(JSON.stringify(postArray[index]))
-        }
-      };
-      var req=http.request(options,function(res){
-          var content="";
-          res.on('data',function(data){
-            content+=data;
-          })
-          res.on('end',function(){
-              console.log("请求完成");
-              handle(index+1);
-          });
-      });
-      req.on("error",function(err){
-          if(err)
-            console.log(err)
-      })
+ function post(index){
+	if(index>=postArray.length)return
+    return new Promise((reslove,reject)=>{
+	var request = require("request")
+        request.post({
+            url: "https://www.jzjo.com/post.php",
+            method: 'POST',
+            form: postArray[index]
+        }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log("上传成功");
+            }else{
+				console.log("上传失败:"+postArray[index].name);
+			}
+			post(index+1);
+        });
+    })
+}
+
+
     // logData[gamesData[index].title] = nextIndex;
     // fs.writeFile(uploadLogPath, JSON.stringify(logData), {}, (err) => {
     //     if (err)
@@ -172,6 +168,6 @@ for (let i = 0; i < gamesData.length; ++i) {
     //     else
     //         console.log("写入log成功!");
     // })
-}
 
-handle(0);
+
+post(0);

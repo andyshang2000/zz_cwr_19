@@ -147,7 +147,7 @@ async function main(): Promise<void> {
 				data.title=arr.join(" ");
 			}
 			else{
-				data.title=title.charAt(0).toUpperCase+title.slice(1);
+				data.title=title.charAt(0).toUpperCase()+title.slice(1);
 			}
 
 			indexDatas[data.title] = nextIndex;
@@ -166,6 +166,7 @@ async function main(): Promise<void> {
 
 		for (let i = nextIndex + 1; i <= 1592; ++i, ++nextIndex) {
 			let url = "http://up.zdhm.xyz/detail?id=" + i;
+			console.log("页面id到----"+i)
 			let res = await page.goto(url, { timeout: 0 });
 			if (res.status() != 200) {
 				nextIndex--;
