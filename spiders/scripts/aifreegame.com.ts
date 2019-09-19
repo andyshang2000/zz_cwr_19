@@ -38,7 +38,6 @@ fileSystem.mkdir("../data/aifreegame.com", function (err) {
 const [node, tsPath, outfileName, startPage, headless = false, ...args] = process.argv;
 const filePath = path.resolve(__dirname, '../data/aifreegame.com/' + outfileName);
 var t1 = startPage.split("/");
-
 var category = t1[t1.length - 1].split("-")[0];
 var browser;
 var ResultData: Result = { "data": [], "index": {} };
@@ -130,27 +129,21 @@ async function main(): Promise<void> {
                 return gamesData;
             }, indexDatas);
             for (let i = 0; i < dataArray.length; ++i, ++nextIndex) {
+                dataArray[i].cat=category;
                 await page.goto(dataArray[i].url, { timeout: 0 });
-                console.log(dataArray[i].url);
-
-                let test=await page.evaluate(()=>{
-                    return document.getElementById("gameDiv")
-                })
-                console.log(test)
-                dataArray[i].url = await page.evaluate(() => {
+                let temp = await page.evaluate(() => {
                     let gameFrame = document.querySelector("#gameframe")
                     let iframe = gameFrame as HTMLIFrameElement
                     if (iframe) {
                         return iframe.src;
-                    } else {
-                        return (gameFrame as HTMLObjectElement).data;
                     }
                 });
-                //console.log(dataArray[i].url)
-                if (endWith(dataArray[i].url, ".swf")) {
+                if(temp){
+                    dataArray[i].url=temp;
+                }
+                if(!dataArray[i].url){
                     dataArray[i].gametype = "flash";
                 }
-
                 dataArray[i].desc = await page.evaluate(() => {
                     return document.querySelector(".description.flex-side-desc>div").innerHTML.trim();
                 });
