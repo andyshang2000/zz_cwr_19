@@ -21,7 +21,7 @@ function readJson(jsonFilePath: string) {
         return null;
     }
 }
-const [node, tsPath, localGameDir = "E:/desktop/Main/spiders/resource/up.zdhm.xyz", remote_gamePath = "/opt/www/kkgames/public/games", serverPath = "/opt/www/kkgames/public"] = process.argv;
+const [node, tsPath, localGameDir = "E:/desktop/Main/spiders/resource/up.zdhm.xyz", remote_gamePath = "/opt/www/kkgames/public/upload/games", serverPath = "/opt/www/kkgames/public"] = process.argv;
 // //本地游戏总目录
 // var localGameDir="E:/desktop/Main/spiders/resource/up.zdhm.xyz"
 // //服务器存游戏文件的总目录

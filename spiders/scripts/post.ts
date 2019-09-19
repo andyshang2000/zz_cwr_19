@@ -30,7 +30,8 @@ interface postdata {
     height: number
     type: string
     rating: number
-    plays: number,
+    plays: number
+	tags: string
     desc: string
     category_id: number
     localimg: string
@@ -73,6 +74,7 @@ for (let i = 0; i < gamesData.length; ++i) {
         type: gamesData[i].gametype,
         rating: 1,
         plays: 1,
+		tags:gamesData[i].tags,
         desc: gamesData[i].desc,
         category_id: 1,
         localimg: "",
@@ -81,6 +83,9 @@ for (let i = 0; i < gamesData.length; ++i) {
     if (gamesData[i].played) {
         data.plays = gamesData[i].played;
     }
+	if(data.tags==""){
+		data.tags=gamesData[i].cat.split(" ")[0];
+	}
     if (gamesData[i].cat) {
         //data.category_id=gamesData[i].cat;
         let catarr = gamesData[i].cat.split(" ");
