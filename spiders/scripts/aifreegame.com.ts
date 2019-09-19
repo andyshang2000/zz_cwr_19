@@ -131,6 +131,10 @@ async function main(): Promise<void> {
             for (let i = 0; i < dataArray.length; ++i, ++nextIndex) {
                 dataArray[i].cat=category;
                 await page.goto(dataArray[i].url, { timeout: 0 });
+                dataArray[i].img=await page.evaluate(()=>{
+                    let iNode=document.querySelector(".gamePlay-icon");
+                    return (iNode as HTMLImageElement).src;
+                });
                 let temp = await page.evaluate(() => {
                     let gameFrame = document.querySelector("#gameframe")
                     let iframe = gameFrame as HTMLIFrameElement
