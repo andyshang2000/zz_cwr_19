@@ -1,14 +1,8 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { timeout } from '../utils/timeout'
 
 
 var http=require('https');
-interface uploadLog {
-    gameName: string
-    path: string
-    date: string
-}
 
 interface gamedata {
     title: string
@@ -50,19 +44,21 @@ function readJson(jsonFilePath: string) {
         return null;
     }
 }
-var catArray = ['Girls', 'Sports', 'Puzzle', 'Action', 'Arcade', 'Adventure', 'Strategy', 'Music', 'Beauty', 'Risk', 'Racing', 'Logic'];
-var gamesData: gamedata[] = [];
-const filePath = path.resolve(__dirname, 'E:/desktop/Main/spiders/data/up.zdhm.xyz/all.json');
-gamesData = readJson(filePath).data;
-
-
-var logData = {};
-var nextIndex = 0;
-const uploadLogPath = path.resolve(__dirname, '../data/up.zdhm.xyz/post.log');
-if (readJson(uploadLogPath)) {
-    logData = readJson(uploadLogPath);
-    nextIndex = Object.keys(logData).length
+var  originalArray= ['Girls', 'Sports', 'Puzzle', 'Action', 'Arcade', 'Adventure', 'Strategy', 'Music', 'Beauty', 'Risk', 'Racing', 'Logic','Princess','Baby','Shooting','Winter','Dress-Up','Frozen','Multiplayer','Hairstyle','Zombie',Cartoon','2-Player','Bike','Makeup','Injured','IO','Cooking','Color','Super'];
+var catArray=[];
+for(let i=0;i<originalArray.length;++i){
+	catArray.push(originalArray[i].toLowerCase());
 }
+var gamesData: gamedata[] = [];
+//所有上传只改此处数据json路径
+const dirPath="E:/desktop/Main/spiders/data/aifreegame.com";
+var files=fs.readdirSync(dirPath);
+for(let i=0;i<files.length;++i){
+	var childPath=dirPath+"/"+files[i];
+	if(endWith(childPath,".json"))
+		gamesData=gamesData.concat(readJson(childPath).data);
+}
+
 var postArray:postdata[]=[]
 for (let i = 0; i < gamesData.length; ++i) {
     let data: postdata = {
@@ -89,7 +85,7 @@ for (let i = 0; i < gamesData.length; ++i) {
     if (gamesData[i].cat) {
         //data.category_id=gamesData[i].cat;
         let catarr = gamesData[i].cat.split(" ");
-        data.category_id = catArray.indexOf(catarr[0]) + 2;
+        data.category_id = catArray.indexOf(catarr[0].toLowerCase()) + 2;
         // var catdata = {
         //     name: gamesData[i].cat,
         //     rating: 1
@@ -110,37 +106,16 @@ for (let i = 0; i < gamesData.length; ++i) {
         // }
 
     }
-
+	//本地图片名统一为imgurl最后一部分
     var arr = gamesData[i].img.split("/");
-    if (logData.hasOwnProperty(gamesData[i].title)) {
-        continue;
-    }
-	let arr1=gamesData[i].url.split("/");
-	let tmp=arr1[arr1.length-2];
+	//游戏路径根据title设置
+	let arr1=gamesData[i].title.split(" ");
+	let tmp=arr1.join("-");
 	
     data.localgame = "/games/" + tmp;
     data.localimg = "/gamesimages/" + arr[arr.length-1];
 
     postArray.push(data);
-
-    
-    // request.post({
-    //     url: "https://www.jzjo.com/post.php",
-    //     method: 'POST',
-    //     form: data
-    // }, function (error, response, body) {
-    //     if (!error && response.statusCode == 200) {
-    //         console.log("上传成功");
-    //     }
-    // });
-    // logData[gamesData[i].title] = nextIndex;
-    // fs.writeFile(uploadLogPath, JSON.stringify(logData), {}, (err) => {
-    //     if (err)
-    //         console.log("写入log失败!");
-    //     else
-    //         console.log("写入log成功!");
-    // })
-
 }
 
 

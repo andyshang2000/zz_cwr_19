@@ -145,7 +145,6 @@ async function main(): Promise<void> {
                 if(temp){
                     dataArray[i].url=temp;
                 }else{
-                    dataArray[i].url="";
                     dataArray[i].gametype = "flash";
                 }
                 dataArray[i].desc = await page.evaluate(() => {
