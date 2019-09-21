@@ -1,7 +1,6 @@
 {
 "category-page":[
-	{"url":"http://h5games.online/catalogue.php?genre=adventures","name":"adventures"},
-	{"url":"http://h5games.online/catalogue.php?genre=Animals","name":"Animals"}
+	{"url":"http://h5games.online/catalogue.php","name":"all"}
 ],
 
 "crawl-type":"browser"

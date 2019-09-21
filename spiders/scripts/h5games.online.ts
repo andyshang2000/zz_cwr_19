@@ -6,7 +6,7 @@ import { timeout } from '../utils/timeout'
 import { fstat } from 'fs-extra';
 
 const log = console.log
-//ts-node h5games.online.ts animals.json http://h5games.online/catalogue.php?genre=Animals true
+//ts-node h5games.online.ts all.json http://h5games.online/catalogue.php
 interface GameData {
 	title: string
 	img: string
@@ -95,7 +95,7 @@ async function main(): Promise<void> {
 		let jsonUrl=await page.evaluate(()=>{
 			return (document.querySelector("#json>a") as HTMLAnchorElement).href;
 		})
-		let res=await page.goto(jsonUrl);
+		let res=await page.goto(jsonUrl, {timeout:0});
 		let jsonArray=await res.json();
 		for(;nextIndex<jsonArray.length;++nextIndex){
 			let gameData: GameData = {

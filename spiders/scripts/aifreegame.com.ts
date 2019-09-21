@@ -93,7 +93,9 @@ async function main(): Promise<void> {
         });
         /*起始页面*/
         await page.goto(startPage, { timeout: 0 });
-        await page.waitFor(3000);
+		for(let time=1;time<=10;++time){
+			await page.keyboard.press('PageDown',{delay:3000});
+		}
         log(chalk.yellow('页面初次加载完毕'));
 
         // let jsonUrl=await page.evaluate(()=>{

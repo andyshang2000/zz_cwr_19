@@ -31,7 +31,11 @@ interface postdata {
     localimg: string
     localgame: string
 };
-
+function endWith(str: string, target: string) {
+    let start = str.length - target.length;
+    let sub = str.substring(start);
+    return sub == target;
+}
 
 function readJson(jsonFilePath: string) {
     if (fs.existsSync(jsonFilePath)) {
@@ -44,7 +48,7 @@ function readJson(jsonFilePath: string) {
         return null;
     }
 }
-var  originalArray= ['Girls', 'Sports', 'Puzzle', 'Action', 'Arcade', 'Adventure', 'Strategy', 'Music', 'Beauty', 'Risk', 'Racing', 'Logic','Princess','Baby','Shooting','Winter','Dress-Up','Frozen','Multiplayer','Hairstyle','Zombie',Cartoon','2-Player','Bike','Makeup','Injured','IO','Cooking','Color','Super'];
+var  originalArray= ['Girls', 'X', 'Sports', 'Puzzle', 'Action', 'Arcade', 'Adventure', 'Strategy', 'Music', 'Beauty', 'Risk', 'Racing', 'Logic','Princess','Baby','Shooting','Winter','Dress-Up','Frozen','Multiplayer','Hairstyle','Zombie','Cartoon','2-Player','Bike','Makeup','Injured','IO','Cooking','Color','Super','other'];
 var catArray=[];
 for(let i=0;i<originalArray.length;++i){
 	catArray.push(originalArray[i].toLowerCase());
@@ -85,7 +89,7 @@ for (let i = 0; i < gamesData.length; ++i) {
     if (gamesData[i].cat) {
         //data.category_id=gamesData[i].cat;
         let catarr = gamesData[i].cat.split(" ");
-        data.category_id = catArray.indexOf(catarr[0].toLowerCase()) + 2;
+        data.category_id = catArray.indexOf(catarr[0].toLowerCase()) + 1;
         // var catdata = {
         //     name: gamesData[i].cat,
         //     rating: 1
@@ -134,6 +138,7 @@ for (let i = 0; i < gamesData.length; ++i) {
                 console.log("上传成功");
             }else{
 				console.log("上传失败:"+postArray[index].name);
+				console.log(postArray[index]);
 			}
 			post(index+1);
         });

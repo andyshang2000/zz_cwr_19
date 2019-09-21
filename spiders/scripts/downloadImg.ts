@@ -25,7 +25,7 @@ function readJson(jsonFilePath: string) {
 }
 
 var gamesData: gamedata[] = [];
-const filePath = path.resolve(__dirname, 'E:/desktop/Main/spiders/data/up.zdhm.xyz/all.json');
+const filePath = path.resolve(__dirname, 'E:/desktop/Main/spiders/data/h5games.online/all.json');
 gamesData = readJson(filePath).data;
 
 function getImg(index){
@@ -36,7 +36,7 @@ function getImg(index){
 	console.log(imgName)
 	if(imgName.indexOf("png")!=-1||imgName.indexOf("jpg")!=-1||imgName.indexOf("jpeg")!=-1){
 			var request=require("request");
-		let writeStream = fs.createWriteStream("../data/xyz.games/"+imgName);
+		let writeStream = fs.createWriteStream("../data/h5games.online/images/"+imgName);
 		let readStream = request(gamesData[index].img,(err,response)=>{
 			if(err){
 				console.log("错误信息:" + err)
