@@ -55,7 +55,7 @@ for(let i=0;i<originalArray.length;++i){
 }
 var gamesData: gamedata[] = [];
 //所有上传只改此处数据json路径
-const dirPath="E:/desktop/Main/spiders/data/aifreegame.com";
+const dirPath="E:/desktop/Main/spiders/data/h5games.online";
 var files=fs.readdirSync(dirPath);
 for(let i=0;i<files.length;++i){
 	var childPath=dirPath+"/"+files[i];
@@ -112,13 +112,13 @@ for (let i = 0; i < gamesData.length; ++i) {
     }
 	//本地图片名统一为imgurl最后一部分
     var arr = gamesData[i].img.split("/");
-	//游戏路径根据title设置
-	let arr1=gamesData[i].title.split(" ");
-	let tmp=arr1.join("-");
-	
+	data.localimg = "/gamesimages/" + arr[arr.length-1];
+	//let arr1=gamesData[i].title.split(" ");
+	//let tmp=arr1.join("-");
+	//游戏路径设置
+	let arr1=gamesData[i].url.split("/");
+	let tmp=arr1[arr1.length-2];
     data.localgame = "/games/" + tmp;
-    data.localimg = "/gamesimages/" + arr[arr.length-1];
-
     postArray.push(data);
 }
 
