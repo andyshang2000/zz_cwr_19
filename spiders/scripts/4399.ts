@@ -56,8 +56,13 @@ function readJson(jsonFilePath: string) {
 }
 // /*初始化上次抓取进度*/
 ResultData = readJson(filePath);
-if(!ResultData)
-    ResultData = { "data": [], "index": {} };
+if (ResultData) {
+	gamesDatas = ResultData.data;
+	indexDatas = ResultData.index;
+	nextIndex = Object.keys(indexDatas).length;
+}
+else
+	ResultData = { "data": [], "index": {} };
 
 const logData=readJson(logPath);
 if(logData){
