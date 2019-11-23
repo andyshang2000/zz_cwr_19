@@ -174,7 +174,9 @@ async function main(): Promise<void> {
                         await page.goto(temp,{timeout:0});
                         dataArray[i].swfURL=await page.evaluate(()=>{
                             let embed = document.querySelector("object>embed");
-                            return (embed as HTMLEmbedElement).src;
+                            if(embed)
+                                return (embed as HTMLEmbedElement).src;
+                            return "";
                         });
                     }
                 }
@@ -188,6 +190,14 @@ async function main(): Promise<void> {
                     }, flashgame);
                 }
                 else {
+                    dataArray.splice(i, 1);
+                    log("不是flash游戏!")
+                    i--;
+                    nextIndex--;
+                    continue;
+                }
+                if(!dataArray.swfURL){
+                    
                     dataArray.splice(i, 1);
                     log("不是flash游戏!")
                     i--;

@@ -12,6 +12,7 @@ export const download = (url: string, downloadPath: string) => {
     readStream.pipe(writeStream);
     
     readStream.on('end', function () {
+        console.log(url);
         console.log('文件下载成功');
 		//console.log('服务正常结束');
     });
