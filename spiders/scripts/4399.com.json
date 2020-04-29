@@ -1,7 +1,11 @@
 {
 "category-page":[
 	{"url":"http://www.4399.com/flash_fl/5_1.htm","name":"益智"},
-	{"url":"http://www.4399.com/flash_fl/6_1.htm","name":"冒险"}
+	{"url":"http://www.4399.com/flash_fl/6_1.htm","name":"冒险"},
+	{"url":"http://www.4399.com/flash_fl/12_1.htm","name":"休闲"},
+	{"url":"http://www.4399.com/flash_fl/3_1.htm","name":"体育"},
+	{"url":"http://www.4399.com/flash_fl/4_1.htm","name":"射击"},
+	{"url":"http://www.4399.com/flash_fl/16_1.htm","name":"装扮"}
 ],
 
 "crawl-type":"browser"
