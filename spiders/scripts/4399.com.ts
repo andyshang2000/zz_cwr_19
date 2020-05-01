@@ -34,7 +34,7 @@ fileSystem.mkdir("../data/4399.com", function (err) {
 		console.log("创建目录成功");
 	}
 })
-const [node, tsPath, outfileName, startPage,headless=true, ...args] = process.argv;
+const [node, tsPath, outfileName, startPage,headless=false, ...args] = process.argv;
 const filePath = path.resolve(__dirname, '../data/4399.com/' + outfileName);
 console.log(filePath);
 var pageCount = 0;
@@ -98,19 +98,6 @@ async function main(): Promise<void> {
 		await page.goto(startPage, { timeout: 0 });
 		log(chalk.yellow('页面初次加载完毕'));
 
-		// const divsCounts = await page.$$eval('div', divs => divs.length);
-		// console.log(divsCounts+"----------------------");
-		// let imgs=await page.evaluate(()=>{
-		// 	let arr=[];
-		// 	//let gameDiv = document.querySelector('.list.affix.cf');
-		// 	let gameNodes = document.querySelectorAll("img");
-		// 	for(let i=0;i<gameNodes.length;++i){
-		// 		//let gg = gameNodes[i].querySelector("img");
-		// 		arr.push(gameNodes[i].src);
-		// 	}
-		// 	return arr;
-		// })
-		// console.log(imgs);
 		const array = await page.evaluate(() => {
 			let page_div = document.getElementsByClassName("pag")[1];
 			let pageTags = page_div.getElementsByTagName("a");
@@ -174,75 +161,32 @@ async function main(): Promise<void> {
 						return tagArr.join(" ");
 					});
 					if(dataArray[i].tags.indexOf("H5游戏")!=-1){
-							dataArray[i].gametype="h5";
-					}
-					dataArray[i].desc = await page.evaluate(() => {
-						let intro = document.querySelector("#introduce");
-						if (intro)
-							return document.querySelector("#introduce>font").textContent.trim();
-						return "";
-					});
-
-					let start = await intr_box.$(".play>.btn");
-					await start.click();
-					await page.waitFor(1000);
-					
-					if (dataArray[i].gametype == "h5") {
-						dataArray[i].url = await page.evaluate(() => {
-							return (document.querySelector("#flash22") as HTMLIFrameElement).src;
-						});
-					}
-					else if (dataArray[i].gametype == "flash") {
-						dataArray[i].url = await page.evaluate(() => {
-							let embed = document.querySelector("#flashgame1");
-							if (embed)
-								return (embed as HTMLEmbedElement).src;
-							else
-								return (document.querySelector("#flash22") as HTMLIFrameElement).src;
-						});
-					}
-				}
-				else if(swfdiv){
+						dataArray[i].gametype="h5";
 						dataArray[i].desc = await page.evaluate(() => {
-						let instruction = document.querySelector(".game_cz");
-						if (instruction) {
-							let desc_p = instruction.getElementsByClassName("n_box")[0].getElementsByTagName("p")[2];
-							if (!desc_p.textContent)
-								desc_p = instruction.getElementsByClassName("n_box")[0].getElementsByTagName("p")[4];
-							return desc_p.textContent.trim();
-						}
-					});
-					/*根据gametype抓取url*/
-					dataArray[i].url = await page.evaluate(() => {
-						let embed = document.querySelector("#flashgame1");
-						if (embed)
-							return (embed as HTMLEmbedElement).src;
-						else
+							let intro = document.querySelector("#introduce");
+							if (intro)
+								return document.querySelector("#introduce>font").textContent.trim();
+							return "";
+						});
+						let start = await intr_box.$(".play>.btn");
+						await start.click();
+						await page.waitFor(3000);
+						dataArray[i].url = await page.evaluate(() => {
 							return (document.querySelector("#flash22") as HTMLIFrameElement).src;
-					});
-					
-					dataArray[i].tags = await page.evaluate(() => {
-						let tags_div = document.querySelector(".game_fl");
-						if (tags_div) {
-							let a_tags = tags_div.querySelectorAll("a");
-							let tagArr = [];
-							for (let j = 2; j < a_tags.length; ++j) {
-								tagArr.push(a_tags[j].textContent.trim());
-							}
-							return tagArr.join(" ");
-						}
-					});
+						});
+					}
+					else{
+						nextIndex--;
+						continue;
+					}
+
 				}
+
 				else{
 					nextIndex--;
 					continue;
 				}
-				if(dataArray[i].gametype=="flash" && endWith(dataArray[i].url,".htm")){
-					await page.goto(dataArray[i].url);
-					dataArray[i].url=await page.evaluate(()=>{
-						return (document.querySelector("object>embed") as HTMLEmbedElement).src;
-					});
-				}
+
 				dataArray[i].cat = category;
 				/*整理数据写入文件*/
 				gamesDatas.push(dataArray[i]);
